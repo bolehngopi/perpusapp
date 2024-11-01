@@ -14,7 +14,6 @@
 
         <div class="mb-4 flex items-center">
             <div class="w-16 h-16 bg-gray-200 rounded-full overflow-hidden flex items-center justify-center">
-                <!-- Assuming you have a profile picture URL -->
                 @if ($user->profile_picture)
                     <img src="{{ asset('storage/' . $user->profile_picture) }}" alt="Profile Picture"
                         class="w-full h-full object-cover">
@@ -28,6 +27,32 @@
                 <label class="block font-medium text-gray-700">Email</label>
                 <p class="text-gray-600">{{ $user->email }}</p>
             </div>
+        </div>
+
+        <!-- Penalty Details Section -->
+        <div class="mt-6">
+            <h2 class="text-xl font-semibold mb-4">Penalties</h2>
+
+            @if ($user->borrowings->whereNotNull('penalty')->isEmpty())
+                <p class="text-gray-600">No penalties found.</p>
+            @else
+                <div class="space-y-4">
+                    @foreach ($user->borrowings as $borrowing)
+                        @if ($borrowing->penalty)
+                            <div class="p-4 bg-red-100 rounded">
+                                <h3 class="font-semibold text-gray-800">{{ $borrowing->book->title }}</h3>
+                                <p class="text-gray-700">Overdue Days: {{ $borrowing->penalty->overdue_days }}</p>
+                                <p class="text-gray-700">Penalty Amount: Rp
+                                    {{ number_format($borrowing->penalty->amount, 0, ',', '.') }}</p>
+                                <p class="text-gray-600 text-sm">Due Date: {{ $borrowing->due_at->format('d M Y') }}</p>
+                                <p class="text-gray-600 text-sm">Returned At:
+                                    {{ $borrowing->returned_at ? $borrowing->returned_at->format('d M Y') : 'Not Returned' }}
+                                </p>
+                            </div>
+                        @endif
+                    @endforeach
+                </div>
+            @endif
         </div>
 
         <div class="flex gap-4 mt-6">

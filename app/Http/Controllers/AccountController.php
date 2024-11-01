@@ -9,10 +9,10 @@ class AccountController extends Controller
 {
     public function show()
     {
-        $user = Auth::user(); // Get the authenticated user
-        // dd($user);
+        $user = Auth::user()->load('borrowings.penalty', 'borrowings.book'); // Load borrowings with penalties and book details
         return view('account.show', compact('user'));
     }
+
 
     // Show the Edit Profile form
     public function edit()

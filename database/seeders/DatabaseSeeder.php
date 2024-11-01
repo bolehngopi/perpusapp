@@ -21,9 +21,10 @@ class DatabaseSeeder extends Seeder
             BookSeeder::class,
         ]);
 
-        // User::factory()->create([
-        //     'name' => 'Test User',
-        //     'email' => 'test@example.com',
-        // ]);
+        User::factory()->create([
+            'name' => 'Admin',
+            'email' => 'admin@example.com',
+            'password' => 'password',
+        ]);
     }
 }

@@ -43,7 +43,29 @@ class Borrowing extends Model
     // Increase available copies when returned
     public function returnBook()
     {
+        $now = now();
+        $overdueDays = max(0, $now->diffInDays($this->due_at, false));  // Calculate overdue days
+
+        if ($overdueDays > 0) {
+            $penaltyAmount = $overdueDays * 2000; // Rp. 2,000 per overdue day
+
+            // Create a penalty record
+            Penalty::create([
+                'borrowing_id' => $this->id,
+                'overdue_days' => $overdueDays,
+                'amount' => $penaltyAmount,
+            ]);
+        }
+
+        // Update book's available copies and mark return date
         $this->book->increment('available_copies');
-        $this->update(['returned_at' => now()]);
+        $this->update(['returned_at' => $now]);
     }
+
+
+    public function penalty()
+    {
+        return $this->hasOne(Penalty::class);
+    }
+
 }

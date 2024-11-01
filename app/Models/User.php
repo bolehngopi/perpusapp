@@ -64,4 +64,14 @@ class User extends Authenticatable
     {
         return $this->belongsTo(Role::class, 'role_id');
     }
+
+    /**
+     * Define the borrowings relationship
+     *
+     * @return \Illuminate\Database\Eloquent\Relations\HasMany
+     */
+    public function borrowings()
+    {
+        return $this->hasMany(Borrowing::class);
+    }
 }
