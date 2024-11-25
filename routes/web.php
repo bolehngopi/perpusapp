@@ -10,11 +10,13 @@ use Illuminate\Support\Facades\Route;
 
 // Authentication routes
 Route::controller(AuthController::class)->group(function () {
-    Route::get('/login', 'showLoginForm')->name('login');
-    Route::post('/login', 'login');
-    Route::get('/register', 'showRegistrationForm')->name('register');
-    Route::post('/register', 'register');
-    Route::post('/logout', 'logout')->name('logout');
+    Route::middleware('guest')->group(function() {
+        Route::get('/login', 'showLoginForm')->name('login');
+        Route::post('/login', 'login');
+        Route::get('/register', 'showRegistrationForm')->name('register');
+        Route::post('/register', 'register');
+    });
+    Route::post('/logout', 'logout')->name('logout')->middleware('auth');
 });
 
 // Protected route (accessible only after login)
@@ -31,7 +33,9 @@ Route::middleware(['auth'])->group(function () {
             Route::get('/books/create', [BookController::class, 'create'])->name('create');
             Route::get('/books', [DashboardController::class, 'books'])->name('books');
             Route::post('/books', [BookController::class, 'store'])->name('store');
-            Route::get('/users', [DashboardController::class, 'users'])->name('users');
+            Route::get('/users', [DashboardController::class, 'users'])->name(name: 'users');
+            Route::get('/users/{user}', [AccountController::class, 'userDetails'])->name('users.show');
+            Route::patch('/users/{id}', [AccountController::class, 'upgradeToStaff'])->name('users.upgrade');
         });
 
     Route::middleware(RoleMiddleware::class . ':admin,staff')->group(function () {

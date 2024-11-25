@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 
@@ -44,4 +45,19 @@ class AccountController extends Controller
 
         return redirect()->route('account.show')->with('success', 'Profile updated successfully!');
     }
+
+    public function upgradeToStaff($id)
+    {
+        $user = User::findOrFail($id);
+        $user->role_id = 2; // Assuming '2' is the ID for the Staff role
+        $user->save();
+
+        return redirect()->back()->with('success', 'User upgraded to staff successfully!');
+    }
+
+    public function userDetails(User $user)
+    {
+        return view('dashboard.user-details', compact('user'));
+    }
+
 }

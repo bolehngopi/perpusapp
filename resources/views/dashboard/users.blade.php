@@ -4,47 +4,75 @@
 
 @section('content')
     <div class="max-w-7xl mx-auto">
-        <h1 class="text-4xl font-bold text-center mb-12">All Users</h1>
+        <h1 class="text-4xl font-bold text-center mb-12 dark:text-white">All Users</h1>
 
         @if ($users->isEmpty())
-            <p class="text-center text-gray-500">No users available at the moment. Please check back later!</p>
+            <p class="text-center text-gray-500 dark:text-gray-300">No users available at the moment. Please check back
+                later!</p>
         @else
-            <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-8">
-                @foreach ($users as $user)
-                    <div
-                        class="group bg-white shadow-lg rounded-lg overflow-hidden hover:shadow-xl transition-shadow duration-300 flex flex-col h-full">
-                        <div class="p-4 flex flex-col flex-grow">
-                            <h2 class="text-lg font-semibold mb-1 group-hover:text-blue-500 transition-colors">
-                                {{ $user->name }}
-                            </h2>
-                            <p class="text-sm text-gray-500"><strong>Email:</strong> {{ $user->email }}</p>
-                            <p class="text-sm text-gray-500"><strong>Role:</strong> {{ $user->role->name }}</p>
-                            <p class="text-sm text-gray-500"><strong>Joined:</strong>
-                                {{ $user->created_at->format('M d, Y') }}</p>
-                        </div>
-
-                        <div class="p-4 flex justify-between items-center">
-                            {{-- <a href="{{ route('users.show', $user->id) }}"
-                                class="w-full text-center bg-blue-500 hover:bg-blue-600 text-white py-2 rounded-lg transition-colors">
-                                View
-                            </a> --}}
-                            {{-- <a href="{{ route('users.edit', $user->id) }}"
-                                class="ml-2 w-full text-center bg-yellow-500 hover:bg-yellow-600 text-white py-2 rounded-lg transition-colors">
-                                Edit
-                            </a> --}}
-
-                            {{-- <form action="{{ route('users.destroy', $user->id) }}" method="POST" class="ml-2 w-full">
-                                @csrf
-                                @method('DELETE')
-                                <button type="submit"
-                                    class="w-full bg-red-500 hover:bg-red-600 text-white py-2 rounded-lg transition-colors"
-                                    onclick="return confirm('Are you sure you want to delete this user?')">
-                                    Delete
-                                </button>
-                            </form> --}}
-                        </div>
-                    </div>
-                @endforeach
+            <div class="overflow-x-auto">
+                <table class="min-w-full bg-white dark:bg-gray-800 shadow-lg rounded-lg">
+                    <thead>
+                        <tr>
+                            <th
+                                class="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider">
+                                Name
+                            </th>
+                            <th
+                                class="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider">
+                                Email
+                            </th>
+                            <th
+                                class="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider">
+                                Role
+                            </th>
+                            <th
+                                class="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider">
+                                Joined
+                            </th>
+                            <th
+                                class="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider">
+                                Actions
+                            </th>
+                        </tr>
+                    </thead>
+                    <tbody class="divide-y divide-gray-200 dark:divide-gray-700">
+                        @foreach ($users as $user)
+                            <tr class="hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors duration-200">
+                                <td
+                                    class="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900 dark:text-white">
+                                    <a href="{{ route('dashboard.users.show', $user->id) }}"> {{ $user->name }} </a>
+                                </td>
+                                <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500 dark:text-gray-300">
+                                    {{ $user->email }}
+                                </td>
+                                <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500 dark:text-gray-300">
+                                    {{ $user->role->name }}
+                                </td>
+                                <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500 dark:text-gray-300">
+                                    {{ $user->created_at->format('M d, Y') }}
+                                </td>
+                                <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500 dark:text-gray-300">
+                                    @if (!in_array($user->role->name, ['staff', 'admin']))
+                                        <form action="{{ route('dashboard.users.upgrade', $user->id) }}" method="POST">
+                                            @csrf
+                                            @method('PATCH')
+                                            <button type="submit"
+                                                class="bg-blue-500 text-white px-4 py-2 rounded-lg hover:bg-blue-600 transition-colors dark:bg-blue-700 dark:hover:bg-blue-600">
+                                                Upgrade to Staff
+                                            </button>
+                                        </form>
+                                    @else
+                                        <button type="submit" disabled
+                                            class="bg-gray-500 text-white px-4 py-2 rounded-lg cursor-not-allowed dark:bg-gray-600">
+                                            Already staff
+                                        </button>
+                                    @endif
+                                </td>
+                            </tr>
+                        @endforeach
+                    </tbody>
+                </table>
             </div>
 
             <div class="mt-12">

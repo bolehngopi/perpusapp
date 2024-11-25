@@ -68,5 +68,15 @@
                 </button>
             </form>
         </div>
+
+        <!-- Access Dashboard Button for Staff or Admin -->
+        @if (in_array($user->role->name, ['staff', 'admin']))
+            <div class="mt-6">
+                <a href="{{ route('dashboard.index') }}"
+                    class="w-full text-center bg-green-500 hover:bg-green-600 text-white py-2 px-4 rounded transition duration-200">
+                    Access Dashboard
+                </a>
+            </div>
+        @endif
     </div>
 @endsection

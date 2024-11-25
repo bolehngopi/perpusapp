@@ -41,7 +41,7 @@
 
         <div class="mb-4">
             <label for="cover" class="block font-medium">Cover Image</label>
-            <input type="file" name="cover" id="cover" class="w-full border rounded p-2">
+            <input type="file" name="cover" id="cover" class="w-full border rounded p-2" accept="image/jpeg, image/png">
         </div>
 
         <button type="submit" class="bg-blue-500 text-white px-4 py-2 rounded">Update Book</button>

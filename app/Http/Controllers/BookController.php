@@ -89,6 +89,7 @@ class BookController extends Controller
             'cover' => 'nullable|image|max:2048'
         ]);
 
+
         // Handle cover replacement if a new one is uploaded
         if ($request->hasFile('cover')) {
             if ($book->cover) {
@@ -99,6 +100,11 @@ class BookController extends Controller
         }
 
         $book->update(array_merge($request->except('cover'), ['available_copies' => $request->total_copies]));
+
+        // Hanlde error if book is not updated
+        if (!$book->wasChanged()) {
+            return back()->with('error', 'No changes were made!');
+        }
 
         return redirect()->route('dashboard.index')->with('success', 'Book updated successfully!');
     }
